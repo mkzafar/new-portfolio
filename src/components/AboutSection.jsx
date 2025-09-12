@@ -15,10 +15,10 @@ const skills = {
 };
 
 const currentLearning = [
-  "Advanced React Patterns",
   "System Design",
-  "Cloud Architecture",
-  "Machine Learning Operations",
+  "DevOps",
+  "Data Analytics",
+  "NLP & LLM",
 ];
 
 export default function AboutSection() {

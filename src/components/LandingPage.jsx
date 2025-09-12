@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ArrowDown, Terminal, Code, Cpu } from "lucide-react";
+import { ArrowDown, Terminal, Code, Cpu, Calculator } from "lucide-react";
 
 import ParticleField from "@/components/landing/ParticleField";
 import InteractiveGrid from "@/components/landing/InteractiveGrid";
@@ -119,11 +119,11 @@ export default function LandingPage({ onEnter }) {
               </div>
               <div className="flex items-center gap-2">
                 <Cpu className="w-4 h-4" />
-                <TypewriterText text="Algorithm Design" delay={800} speed={60} />
+                <TypewriterText text="Al & ML" delay={800} speed={60} />
               </div>
               <div className="flex items-center gap-2">
-                <Terminal className="w-4 h-4" />
-                <TypewriterText text="System Architecture" delay={1600} speed={60} />
+                <Calculator className="w-4 h-4" />
+                <TypewriterText text="Quantitative Finance" delay={1600} speed={60} />
               </div>
             </motion.div>
           )}

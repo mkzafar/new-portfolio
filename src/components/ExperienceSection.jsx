@@ -49,7 +49,7 @@ export default function ExperienceSection() {
   };
 
   return (
-    <section id="experience" className="py-20 bg-white">
+    <section id="experience" className="py-20 bg-gradient-to-b from-slate-50 to-white">
       <div className="max-w-6xl mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
