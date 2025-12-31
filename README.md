@@ -1,6 +1,6 @@
 # Personal Portfolio
-Check it out at **https://mkzafar.me**
 My personal website built to showcase my background, skills, and projects in one place.
+- Check it out at **https://mkzafar.me**
 
 ## Overview
 This portfolio serves as a central hub highlighting **who I am**, my **education**, **professional experience**, and **personal projects**, along with insights into my interests and hobbies. It was dveloped using - HTML/CSS, Vite, Tailwind CSS, & Styled Components
