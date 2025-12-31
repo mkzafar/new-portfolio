@@ -1,13 +1,11 @@
-# Personal Portfolio 
+# Personal Portfolio
+Check it out at **https://mkzafar.me**
+My personal website built to showcase my background, skills, and projects in one place.
 
-## Run locally
-```bash
-npm install
-npm run dev
-```
+## Overview
+This portfolio serves as a central hub highlighting **who I am**, my **education**, **professional experience**, and **personal projects**, along with insights into my interests and hobbies. It was dveloped using - HTML/CSS, Vite, Tailwind CSS, & Styled Components
 
-## Build
-```bash
-npm run build
-npm run preview
-```
+## Features
+- Responsive, mobile-friendly design
+- Clean and modern UI
+- Sections for education, experience, projects, and hobbies
