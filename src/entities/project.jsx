@@ -23,6 +23,7 @@ export class Project {
         github_url: "",
         live_url: "",
         image_url: "", // add later when you have the file
+        category: "Data & AI",
         year: 2025,
       },
       {
@@ -35,6 +36,7 @@ export class Project {
         github_url: "",
         live_url: "",
         image_url: imgYumarket, 
+        category: "Web Development",
         year: 2024,
       },
       {
@@ -59,6 +61,7 @@ export class Project {
         github_url: "",
         live_url: "",
         image_url: "",
+        category: "Data & AI",
         year: 2024,
       },
       {
@@ -71,6 +74,7 @@ export class Project {
         github_url: "",
         live_url: "",
         image_url: imgScribe,
+        category: "Web Development",
         year: 2023,
       },
       {
@@ -83,6 +87,7 @@ export class Project {
         github_url: "",
         live_url: "",
         image_url: imgPlant,
+        category: "Embedded Systems",
         year: 2023,
       },
       {
@@ -107,6 +112,7 @@ export class Project {
         github_url: "",
         live_url: "",
         image_url: imgHTN,
+        category: "Web Development",
         year: 2022,
       },
       {
@@ -119,6 +125,7 @@ export class Project {
         github_url: "",
         live_url: "",
         image_url: imgDisney,
+        category: "Web Development", 
         year: 2021,
       },
     ];

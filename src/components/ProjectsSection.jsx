@@ -9,6 +9,9 @@ import { Github, ExternalLink, Folder } from "lucide-react";
 export default function ProjectsSection() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [category, setCategory] = useState("All");
+
+  const categories = ["All", "Data & AI", "Web Development", "Embedded Systems"];
 
   useEffect(() => {
     loadProjects();
@@ -16,13 +19,18 @@ export default function ProjectsSection() {
 
   const loadProjects = async () => {
     try {
-      const data = await Project.list('order');
+      const data = await Project.list("order");
       setProjects(data);
     } catch (error) {
       console.error("Error loading projects:", error);
     }
     setLoading(false);
   };
+
+  const filteredProjects =
+    category === "All"
+      ? projects
+      : projects.filter((p) => p.category === category);
 
   return (
     <section id="projects" className="py-20 bg-slate-50">
@@ -32,12 +40,32 @@ export default function ProjectsSection() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-8"
         >
-          <h2 className="text-4xl font-bold text-slate-900 mb-4">Featured Projects</h2>
+          <h2 className="text-4xl font-bold text-slate-900 mb-4">
+            Featured Projects
+          </h2>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            A selection of projects that showcase my technical skills and problem-solving abilities
+            A selection of projects that showcase my technical skills and
+            problem-solving abilities
           </p>
+
+          {/* Category Filter Menu */}
+          <div className="flex justify-center gap-4 mt-6 flex-wrap">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                className={`px-4 py-2 rounded-full font-medium transition-colors ${
+                  category === cat
+                    ? "bg-blue-600 text-white"
+                    : "bg-slate-200 text-slate-800"
+                }`}
+                onClick={() => setCategory(cat)}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
         </motion.div>
 
         {loading ? (
@@ -56,9 +84,9 @@ export default function ProjectsSection() {
               </Card>
             ))}
           </div>
-        ) : (
+        ) : filteredProjects.length > 0 ? (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projects.map((project, index) => (
+            {filteredProjects.map((project, index) => (
               <motion.div
                 key={project.id}
                 initial={{ opacity: 0, y: 50 }}
@@ -104,7 +132,10 @@ export default function ProjectsSection() {
                           </Badge>
                         ))}
                         {project.technologies?.length > 3 && (
-                          <Badge variant="secondary" className="px-3 py-1 text-xs bg-slate-100 text-slate-600">
+                          <Badge
+                            variant="secondary"
+                            className="px-3 py-1 text-xs bg-slate-100 text-slate-600"
+                          >
                             +{project.technologies.length - 3} more
                           </Badge>
                         )}
@@ -117,7 +148,9 @@ export default function ProjectsSection() {
                           variant="outline"
                           size="sm"
                           className="flex-1 hover:bg-slate-100 transition-colors"
-                          onClick={() => window.open(project.github_url, '_blank')}
+                          onClick={() =>
+                            window.open(project.github_url, "_blank")
+                          }
                         >
                           <Github className="w-4 h-4 mr-2" />
                           Code
@@ -127,7 +160,9 @@ export default function ProjectsSection() {
                         <Button
                           size="sm"
                           className="flex-1 bg-blue-600 hover:bg-blue-700 text-white transition-colors"
-                          onClick={() => window.open(project.live_url, '_blank')}
+                          onClick={() =>
+                            window.open(project.live_url, "_blank")
+                          }
                         >
                           <ExternalLink className="w-4 h-4 mr-2" />
                           Demo
@@ -139,13 +174,15 @@ export default function ProjectsSection() {
               </motion.div>
             ))}
           </div>
-        )}
-
-        {!loading && projects.length === 0 && (
+        ) : (
           <div className="text-center py-16">
             <Folder className="w-16 h-16 text-slate-400 mx-auto mb-4" />
-            <h3 className="text-xl font-medium text-slate-900 mb-2">No Projects Yet</h3>
-            <p className="text-slate-600">Projects will appear here once they're added to the portfolio.</p>
+            <h3 className="text-xl font-medium text-slate-900 mb-2">
+              No Projects Yet
+            </h3>
+            <p className="text-slate-600">
+              Projects will appear here once they're added to the portfolio.
+            </p>
           </div>
         )}
       </div>
