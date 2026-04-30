@@ -11,3 +11,19 @@ build/
 # OS/editor
 .DS_Store
 Thumbs.db
+
+# Vite local cache
+.vite/
+
+# Storybook / other tool caches  
+.cache/
+.parcel-cache/
+
+# Test artifacts
+coverage/
+
+# Editor
+.idea/
+*.suo
+*.swp
+*.swo

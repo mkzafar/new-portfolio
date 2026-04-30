@@ -123,8 +123,8 @@ export default function LandingPage({ onEnter }) {
         }}
       />
 
-      {/* Hero content — ~1/5 in from left, no max-width so lines never wrap */}
-      <div className="relative z-10" style={{ paddingLeft: "18vw", paddingRight: "3rem" }}>
+      {/* Hero content — small indent on mobile, ~1/5 on desktop */}
+      <div className="relative z-10 pl-6 sm:pl-[10vw] lg:pl-[18vw]" style={{ paddingRight: "3rem" }}>
         {/* Available badge */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -193,7 +193,6 @@ export default function LandingPage({ onEnter }) {
             letterSpacing: "0.01em",
             borderLeft: "2px solid rgba(200,185,160,0.4)",
             paddingLeft: "1rem",
-            whiteSpace: "nowrap",
           }}
         >
           Computer Engineering - York University
