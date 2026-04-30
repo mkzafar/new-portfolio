@@ -1,7 +1,17 @@
 export class Experience {
   static async list(orderBy = '-start_date') {
-    // Temporary local data; replace with your source later.
     const data = [
+      {
+        company: 'Scotiabank',
+        position: 'Data Science Intern',
+        bullets: [],
+        start_date: '2026-05-01',
+        end_date: '2026-08-01',
+        company_url: 'https://www.scotiabank.com/',
+        is_current: false,
+        location: 'Toronto, Ontario',
+        tags: ['Data Science', 'Python', 'ML'],
+      },
       {
         company: 'BMS Lab @ University of Twente',
         position: 'Software Engineer Intern',
@@ -16,7 +26,7 @@ export class Experience {
         company_url: 'https://www.utwente.nl/en/bmslab/',
         is_current: false,
         location: 'Enschede, The Netherlands',
-        tags: ['SCCM', 'Windows 11', 'AD', 'Healthcare'],
+        tags: ['Vue.js', 'Java', 'MongoDB', 'AWS', 'Python', 'Selenium', 'Unity'],
       },
       {
         company: 'Freelance @ Riipen',
@@ -31,7 +41,7 @@ export class Experience {
         end_date: '2023-04-01',
         company_url: 'https://www.riipen.com/',
         location: 'Remote',
-        tags: ['React', 'Node', 'Tailwind'],
+        tags: ['Java', 'Spring', 'Python', 'PostgreSQL', 'Snowflake', 'Azure'],
       },
       {
         company: 'YorkU Application Development Services',
@@ -41,11 +51,11 @@ export class Experience {
           'Automated MySQL updates via scraping to keep course data current.',
           'Streamlined CI/CD with GitHub Actions for faster deploys.',
         ],
-        start_date: '2021-10-01',
+        start_date: '2022-09-01',
         end_date: null,
         company_url: 'https://yorku.dev/',
         location: 'Toronto, Ontario',
-        tags: ['React', 'Node', 'Tailwind'],
+        tags: ['React', 'Node', 'Tailwind', 'MySQL', 'GitHub Actions'],
       },
     ];
 

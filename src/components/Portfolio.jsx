@@ -64,13 +64,27 @@ export default function Portfolio() {
     }
   };
 
+  const grainBg = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23n)' opacity='0.25'/%3E%3C/svg%3E")`;
+
   return (
-    <div className="min-h-screen bg-white">
+    <div
+      className="min-h-screen"
+      style={{
+        backgroundColor: "#e6e1d3",
+        backgroundImage: grainBg,
+        backgroundRepeat: "repeat",
+        backgroundSize: "250px",
+      }}
+    >
       <AnimatePresence mode="wait">
         {currentPage === 'landing' && (
           <LandingPage onEnter={handleEnterFromLanding} />
         )}
       </AnimatePresence>
+      {/* Scroll target so the landing page scroll listener fires on wheel/swipe */}
+      {currentPage === 'landing' && (
+        <div style={{ height: "200vh" }} aria-hidden />
+      )}
 
       {currentPage !== 'landing' && (
         <>
@@ -94,7 +108,7 @@ export default function Portfolio() {
           </main>
           
           {/* Footer */}
-          <footer className="bg-slate-900 text-white py-8">
+          <footer className="py-8" style={{ background: "#2a2a20", color: "white" }}>
             <div className="max-w-6xl mx-auto px-6 text-center">
               <p className="text-slate-400">
                 © 2024 Muhammad Zafar. All rights reserved.

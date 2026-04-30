@@ -1,211 +1,302 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { ArrowDown, Terminal, Code, Cpu, Calculator } from "lucide-react";
+import { Github, Linkedin, ArrowDown } from "lucide-react";
 
-import ParticleField from "@/components/landing/ParticleField";
-import InteractiveGrid from "@/components/landing/InteractiveGrid";
-import TypewriterText from "@/components/landing/TypewriterText";
-
-export default function LandingPage({ onEnter }) {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [showSkills, setShowSkills] = useState(false);
+// Lightweight pure-CSS particle field that reacts to cursor
+function CursorParticles() {
+  const canvasRef = useRef(null);
+  const mouse = useRef({ x: -9999, y: -9999 });
 
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      setMousePosition({
-        x: (e.clientX / window.innerWidth) * 2 - 1,
-        y: (e.clientY / window.innerHeight) * 2 - 1,
-      });
-    };
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    let animId;
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener("resize", resize);
+
+    const onMove = (e) => {
+      mouse.current = { x: e.clientX, y: e.clientY };
+    };
+    window.addEventListener("mousemove", onMove);
+
+    // Build particles
+    const COUNT = 90;
+    const particles = Array.from({ length: COUNT }, () => ({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      ox: 0, // will be set after first frame
+      oy: 0,
+      size: Math.random() * 2.5 + 0.8,
+      opacity: Math.random() * 0.5 + 0.2,
+      speed: Math.random() * 0.3 + 0.1,
+    }));
+    // Save original positions
+    particles.forEach((p) => { p.ox = p.x; p.oy = p.y; });
+
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach((p) => {
+        const dx = mouse.current.x - p.x;
+        const dy = mouse.current.y - p.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const radius = 140;
+
+        if (dist < radius) {
+          const force = (1 - dist / radius) * 60;
+          p.x -= (dx / dist) * force * 0.05;
+          p.y -= (dy / dist) * force * 0.05;
+        } else {
+          p.x += (p.ox - p.x) * 0.03;
+          p.y += (p.oy - p.y) * 0.03;
+        }
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(220, 210, 195, ${p.opacity})`;
+        ctx.fill();
+      });
+      animId = requestAnimationFrame(draw);
+    };
+    draw();
+
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener("resize", resize);
+      window.removeEventListener("mousemove", onMove);
+    };
   }, []);
 
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: "absolute",
+        inset: 0,
+        width: "100%",
+        height: "100%",
+        pointerEvents: "none",
+      }}
+    />
+  );
+}
+
+export default function LandingPage({ onEnter }) {
+  const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
+
   useEffect(() => {
-    const timer = setTimeout(() => setShowSkills(true), 3000);
-    return () => clearTimeout(timer);
+    const handle = (e) => {
+      setMousePos({
+        x: e.clientX / window.innerWidth,
+        y: e.clientY / window.innerHeight,
+      });
+    };
+    window.addEventListener("mousemove", handle);
+    return () => window.removeEventListener("mousemove", handle);
   }, []);
 
   return (
     <motion.div
-      className="fixed inset-0 bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 flex flex-col items-center justify-center text-white z-20 overflow-hidden"
+      className="fixed inset-0 flex flex-col items-start justify-center text-white z-20 overflow-hidden"
+      style={{
+        background: `radial-gradient(ellipse at ${mousePos.x * 100}% ${mousePos.y * 100}%, #5a5a4a 0%, #3d3d30 40%, #2a2a20 100%)`,
+      }}
       initial={{ opacity: 1 }}
-      exit={{ opacity: 0, scale: 0.9 }}
-      transition={{ duration: 1.2, ease: "easeInOut" }}
+      exit={{ opacity: 0, y: "-4vh" }}
+      transition={{ duration: 1, ease: "easeInOut" }}
     >
-      {/* Background layers */}
-      <ParticleField zIndexClass="z-0" />
-      <div className="absolute inset-0 z-[1] opacity-[0.03] pointer-events-none">
-         <InteractiveGrid />
-       </div>
+      {/* Full-bleed particle canvas */}
+      <CursorParticles />
 
-      {/* Dynamic Background Gradient that follows mouse */}
-      <motion.div
-        className="absolute inset-0 opacity-20"
-        animate={{
-          background: `radial-gradient(800px circle at ${50 + mousePosition.x * 25}% ${50 + mousePosition.y * 25}%, rgba(59, 130, 246, 0.15), transparent)`,
+      {/* Subtle vignette */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background:
+            "radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.45) 100%)",
+          pointerEvents: "none",
         }}
-        transition={{ type: "tween", ease: "linear", duration: 0.2 }}
       />
-      
-      {/* Main Content */}
-      <div className="text-center z-10 relative">
-        {/* Glowing accent behind name */}
-        <div className="absolute inset-0 blur-3xl bg-gradient-to-r from-blue-600/20 to-purple-600/20 scale-150" />
-        
-        <motion.div
-          className="mb-8 relative"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.5, delay: 0.3, ease: "easeOut" }}
-        >
-          {/* Title with enhanced styling */}
-          <div className="relative">
-            <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter mb-2 relative">
-              <motion.span 
-                className="bg-gradient-to-r from-white via-blue-200 to-cyan-300 bg-clip-text text-transparent drop-shadow-2xl"
-                animate={{ 
-                  backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
-                }}
-                transition={{ duration: 8, repeat: Infinity }}
-                style={{ backgroundSize: '200% 200%' }}
-              >
-                Muhammad
-              </motion.span>
-            </h1>
-            <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter relative">
-              <motion.span 
-                className="bg-gradient-to-r from-blue-400 via-purple-400 to-indigo-300 bg-clip-text text-transparent drop-shadow-2xl"
-                animate={{ 
-                  backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
-                }}
-                transition={{ duration: 8, repeat: Infinity, delay: 0.5 }}
-                style={{ backgroundSize: '200% 200%' }}
-              >
-                Zafar
-              </motion.span>
-            </h1>
-            
-            {/* Subtle glow effects */}
-            <div className="absolute inset-0 blur-2xl bg-gradient-to-r from-blue-500/10 to-purple-500/10 scale-110" />
-          </div>
-        </motion.div>
 
+      {/* Hero content — offset ~1/5 from left */}
+      <div className="relative z-10 max-w-2xl" style={{ paddingLeft: "18vw", paddingRight: "2rem" }}>
+        {/* Available badge */}
         <motion.div
-          className="mb-8"
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 1.2 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="flex items-center gap-2 mb-8"
         >
-          <p className="text-xl md:text-2xl text-blue-200 mb-4 tracking-wide font-light">
-            <TypewriterText 
-              text="Computer Engineering Student" 
-              delay={1500}
-              speed={80}
-            />
-          </p>
-          
-          {showSkills && (
-            <motion.div
-              className="flex justify-center gap-6 text-sm md:text-base text-blue-300/80"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              <div className="flex items-center gap-2">
-                <Code className="w-4 h-4" />
-                <TypewriterText text="Software Development" delay={0} speed={60} />
-              </div>
-              <div className="flex items-center gap-2">
-                <Cpu className="w-4 h-4" />
-                <TypewriterText text="Al & ML" delay={800} speed={60} />
-              </div>
-              <div className="flex items-center gap-2">
-                <Calculator className="w-4 h-4" />
-                <TypewriterText text="Quantitative Finance" delay={1600} speed={60} />
-              </div>
-            </motion.div>
-          )}
-        </motion.div>
-
-        <motion.button
-          onClick={onEnter}
-          className="group relative bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-xl border border-white/20 px-10 py-4 rounded-full text-white hover:from-blue-600/30 hover:to-purple-600/30 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/25 overflow-hidden"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 2 }}
-          whileHover={{ 
-            scale: 1.05,
-            boxShadow: "0 20px 40px rgba(59, 130, 246, 0.3)"
-          }}
-          whileTap={{ scale: 0.95 }}
-        >
-          {/* Button inner glow */}
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-400/0 via-blue-400/20 to-blue-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          
-          <span className="flex items-center gap-3 text-lg font-medium relative z-10">
-            Explore My Work
-            <motion.div
-              animate={{ y: [0, 5, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            >
-              <ArrowDown className="w-5 h-5 group-hover:translate-y-1 transition-transform" />
-            </motion.div>
-          </span>
-          
-          {/* Animated border */}
-          <motion.div
-            className="absolute inset-0 rounded-full"
-            animate={{
-              background: [
-                "linear-gradient(0deg, rgba(59, 130, 246, 0.2), rgba(147, 51, 234, 0.2))",
-                "linear-gradient(120deg, rgba(59, 130, 246, 0.2), rgba(147, 51, 234, 0.2))",
-                "linear-gradient(240deg, rgba(59, 130, 246, 0.2), rgba(147, 51, 234, 0.2))",
-                "linear-gradient(360deg, rgba(59, 130, 246, 0.2), rgba(147, 51, 234, 0.2))",
-              ],
+          <span
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
+              padding: "6px 14px",
+              borderRadius: "999px",
+              border: "1px solid rgba(200,185,160,0.35)",
+              background: "rgba(200,185,160,0.08)",
+              fontSize: "12px",
+              letterSpacing: "0.08em",
+              color: "rgba(220,210,195,0.85)",
+              fontFamily: "monospace",
             }}
-            transition={{ duration: 4, repeat: Infinity }}
-          />
-        </motion.button>
+          >
+            <span
+              style={{
+                width: 7,
+                height: 7,
+                borderRadius: "50%",
+                background: "#8fbc8f",
+                boxShadow: "0 0 6px #8fbc8f",
+                display: "inline-block",
+              }}
+            />
+            OPEN TO OPPORTUNITIES · FALL 2026
+          </span>
+        </motion.div>
+
+        {/* Name */}
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.2 }}
+          style={{
+            fontSize: "clamp(2.2rem, 4.5vw, 3.8rem)",
+            fontWeight: 700,
+            lineHeight: 1.05,
+            letterSpacing: "-0.02em",
+            color: "#f0ebe2",
+            margin: 0,
+            fontFamily: "'Georgia', 'Times New Roman', serif",
+          }}
+        >
+          Muhammad Zafar
+        </motion.h1>
+
+        {/* Role */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.35 }}
+          style={{
+            marginTop: "1.2rem",
+            fontSize: "clamp(1rem, 2vw, 1.25rem)",
+            color: "rgba(220,210,195,0.7)",
+            fontWeight: 400,
+            letterSpacing: "0.01em",
+            borderLeft: "2px solid rgba(200,185,160,0.4)",
+            paddingLeft: "1rem",
+          }}
+        >
+          Computer Engineering — York University
+          <br />
+          Data Science @ Scotiabank
+        </motion.p>
+
+        {/* Social links */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.5 }}
+          style={{ marginTop: "2.5rem", display: "flex", alignItems: "center", gap: "1rem" }}
+        >
+          <a
+            href="https://github.com/mkzafar"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: 44,
+              height: 44,
+              borderRadius: "50%",
+              border: "1px solid rgba(200,185,160,0.3)",
+              background: "rgba(200,185,160,0.07)",
+              color: "rgba(220,210,195,0.8)",
+              transition: "all 0.2s",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(200,185,160,0.18)";
+              e.currentTarget.style.color = "#f0ebe2";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "rgba(200,185,160,0.07)";
+              e.currentTarget.style.color = "rgba(220,210,195,0.8)";
+            }}
+          >
+            <Github size={18} />
+          </a>
+
+          <a
+            href="https://www.linkedin.com/in/mkzafar23/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: 44,
+              height: 44,
+              borderRadius: "50%",
+              border: "1px solid rgba(200,185,160,0.3)",
+              background: "rgba(200,185,160,0.07)",
+              color: "rgba(220,210,195,0.8)",
+              transition: "all 0.2s",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(200,185,160,0.18)";
+              e.currentTarget.style.color = "#f0ebe2";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "rgba(200,185,160,0.07)";
+              e.currentTarget.style.color = "rgba(220,210,195,0.8)";
+            }}
+          >
+            <Linkedin size={18} />
+          </a>
+
+        </motion.div>
       </div>
 
-      {/* Floating Status Indicators */}
+      {/* Scroll prompt — bottom center */}
       <motion.div
-        className="absolute top-8 right-8 flex flex-col gap-3"
-        initial={{ opacity: 0, x: 50 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1, delay: 2.5 }}
-      >
-        <div className="bg-white/5 backdrop-blur-sm rounded-lg px-4 py-2 border border-white/10">
-          <div className="flex items-center gap-2 text-sm">
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-            <span className="text-green-300">Open to Opportunities</span>
-          </div>
-        </div>
-        <div className="bg-white/5 backdrop-blur-sm rounded-lg px-4 py-2 border border-white/10">
-          <div className="flex items-center gap-2 text-sm">
-            <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
-            <span className="text-blue-300">Available for Internships</span>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Scroll Indicator */}
-      <motion.div
-        className="absolute bottom-8 flex flex-col items-center text-blue-300/60"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 3 }}
+        transition={{ delay: 1.2, duration: 0.8 }}
+        onClick={onEnter}
+        style={{
+          position: "absolute",
+          bottom: 40,
+          left: "50%",
+          transform: "translateX(-50%)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 8,
+          cursor: "pointer",
+          color: "rgba(220,210,195,0.72)",
+          fontSize: "0.7rem",
+          letterSpacing: "0.12em",
+          userSelect: "none",
+          background: "none",
+          border: "none",
+          fontFamily: "monospace",
+        }}
       >
+        <span>SCROLL TO EXPLORE</span>
         <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="text-xs tracking-wider mb-2"
+          animate={{ y: [0, 6, 0] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
         >
-          SCROLL TO EXPLORE
+          <ArrowDown size={14} />
         </motion.div>
-        <div className="w-px h-8 bg-gradient-to-b from-blue-400 to-transparent" />
       </motion.div>
     </motion.div>
   );

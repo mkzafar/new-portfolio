@@ -25,39 +25,29 @@ export default function AboutSection() {
   return (
     <section
       id="about"
-      className="relative py-20 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/40 motion-reduce:transition-none motion-reduce:animate-none"
+      className="relative py-20 motion-reduce:transition-none motion-reduce:animate-none"
+      style={{ background: "transparent" }}
     >
-      {/* subtle dotted overlay for contrast */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 opacity-30"
-        style={{
-          backgroundImage: `
-            radial-gradient(circle at 1px 1px, rgba(59,130,246,0.15) 1px, transparent 0),
-            radial-gradient(circle at 20px 20px, rgba(147,51,234,0.10) 1px, transparent 0)
-          `,
-          backgroundSize: "40px 40px, 60px 60px",
-        }}
-      />
 
       <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
         <motion.div
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8 }}
-                  viewport={{ once: true }}
-                  className="text-center mb-16"
-                >
-                  <h2 className="text-4xl font-bold text-slate-900 mb-4">About Me</h2>
-                  <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-Passionate Computer Engineering student focused on creating innovative solutions
-            that bridge technology and real-world impact                  </p>
-                </motion.div>
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-4xl font-bold text-slate-900 mb-4">About Me</h2>
+          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+            Passionate Computer Engineering student focused on creating innovative solutions
+            that bridge technology and real-world impact
+          </p>
+        </motion.div>
 
         {/* Main grid: Education + Skills */}
         <div className="grid lg:grid-cols-2 gap-12 mb-12">
-          {/* Education (kept from the newer version) */}
+          {/* Education */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -86,8 +76,8 @@ Passionate Computer Engineering student focused on creating innovative solutions
                     <h4 className="font-bold text-slate-900 text-lg mb-1">
                       Bachelor of Engineering (BEng)
                     </h4>
-                    <p className="text-indigo-700 font-semibold mb-2">Computer Engineering</p>
-                    <p className="text-slate-600">Expected Graduation: May 2026</p>
+                    <p className="text-indigo-700 font-semibold mb-1">Computer Engineering</p>
+                    {/* Expected graduation removed */}
                   </div>
 
                   <div className="space-y-3">
@@ -157,7 +147,7 @@ Passionate Computer Engineering student focused on creating innovative solutions
           </motion.div>
         </div>
 
-        {/* Currently Learning (kept, simplified) */}
+        {/* Currently Learning */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}

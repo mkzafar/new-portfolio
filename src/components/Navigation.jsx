@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
 import { Menu, X, Home, Github, Linkedin } from 'lucide-react';
 
 export default function Navigation({ currentPage, onPageChange }) {
@@ -10,7 +9,6 @@ export default function Navigation({ currentPage, onPageChange }) {
     { label: 'About', id: 'about' },
     { label: 'Experience', id: 'experience' },
     { label: 'Projects', id: 'projects' },
-    { label: 'Resume', id: 'resume' },
     { label: 'Contact', id: 'contact' },
   ];
 
@@ -22,7 +20,8 @@ export default function Navigation({ currentPage, onPageChange }) {
   return (
     <>
       <motion.nav
-        className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md shadow-lg border-b border-slate-200/50"
+        className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md shadow-lg border-b border-slate-300/40"
+        style={{ background: "rgba(224, 218, 205, 0.92)" }}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
@@ -32,7 +31,7 @@ export default function Navigation({ currentPage, onPageChange }) {
             {/* Brand / Home */}
             <button
               onClick={() => onPageChange('landing')}
-              className="flex items-center gap-2 text-2xl font-bold text-slate-900 hover:text-blue-600 transition-colors group focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-md"
+              className="flex items-center gap-2 text-2xl font-bold text-slate-900 hover:text-slate-600 transition-colors group focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-md"
             >
               <Home className="w-6 h-6 group-hover:scale-110 transition-transform" />
               MZ
@@ -72,44 +71,38 @@ export default function Navigation({ currentPage, onPageChange }) {
               </div>
             </div>
 
-            {/* Mobile Menu Button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden border-0 bg-transparent hover:bg-transparent shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+            {/* Mobile menu toggle */}
+            <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 rounded-md text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
+              aria-label="Toggle menu"
             >
               {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </Button>
+            </button>
           </div>
         </div>
       </motion.nav>
 
-      {/* Mobile Menu */}
+      {/* Mobile Dropdown */}
       {isMobileMenuOpen && (
         <motion.div
-          className="fixed inset-0 z-[60] bg-white md:hidden"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+          className="fixed top-[72px] left-0 right-0 z-40 border-b border-slate-300/40 shadow-lg md:hidden"
+          style={{ background: "rgba(224, 218, 205, 0.97)" }}
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2 }}
         >
-          <div className="flex flex-col items-center justify-center h-full space-y-8">
-            <button
-              onClick={() => handlePageChange('landing')}
-              className="flex items-center gap-3 text-2xl font-medium text-slate-700 hover:text-blue-600 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-md px-3 py-2"
-            >
-              <Home className="w-6 h-6" />
-              Home
-            </button>
-
+          <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-1">
             {navItems.map((item) => {
               const isActive = currentPage === item.id;
               return (
                 <button
                   key={item.id}
                   onClick={() => handlePageChange(item.id)}
-                  className={`text-2xl font-medium transition-colors px-3 py-2 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
-                    isActive ? 'text-blue-700 underline underline-offset-8 decoration-2' : 'text-slate-700 hover:text-blue-600'
+                  className={`text-left px-3 py-2 rounded-md font-medium transition-colors ${
+                    isActive
+                      ? 'text-slate-900 bg-slate-100'
+                      : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50'
                   }`}
                   aria-current={isActive ? 'page' : undefined}
                 >
@@ -125,7 +118,7 @@ export default function Navigation({ currentPage, onPageChange }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="GitHub"
-                className="p-2 rounded-md text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                className="p-2 rounded-md text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition"
               >
                 <Github className="w-6 h-6" />
               </a>
@@ -134,7 +127,7 @@ export default function Navigation({ currentPage, onPageChange }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="LinkedIn"
-                className="p-2 rounded-md text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                className="p-2 rounded-md text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition"
               >
                 <Linkedin className="w-6 h-6" />
               </a>
@@ -157,50 +150,26 @@ function NavItem({ label, isActive, onClick }) {
       ].join(' ')}
       aria-current={isActive ? 'page' : undefined}
     >
-      {/* Label */}
       <span className="relative z-10">{label}</span>
 
-      {/* TOP line (drops down) */}
+      {/* Top line */}
       <span
         className={[
-          'pointer-events-none absolute left-0 right-0 top-0 h-[2px] bg-blue-600 rounded',
+          'pointer-events-none absolute left-0 right-0 top-0 h-[2px] bg-slate-700 rounded',
           'opacity-0 -translate-y-[6px] scale-x-0 origin-center',
           'transition-all duration-200 ease-out',
           'group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-x-100',
-          'group-focus-visible:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:scale-x-100'
         ].join(' ')}
       />
 
-      {/* BOTTOM line (rises up) — stays visible if active */}
+      {/* Bottom line */}
       <span
         className={[
-          'pointer-events-none absolute left-0 right-0 bottom-0 h-[2px] bg-blue-600 rounded',
+          'pointer-events-none absolute left-0 right-0 bottom-0 h-[2px] bg-slate-700 rounded',
           'transition-all duration-200 ease-out',
           isActive
             ? 'opacity-100 translate-y-0 scale-x-100'
-            : 'opacity-0 translate-y-[6px] scale-x-0 group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-x-100 group-focus-visible:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:scale-x-100'
-        ].join(' ')}
-      />
-
-      {/* RIGHT side (draws upward from bottom) */}
-      <span
-        className={[
-          'pointer-events-none absolute right-0 top-0 bottom-0 w-[2px] bg-blue-600 rounded',
-          'opacity-0 scale-y-0 origin-bottom',
-          'transition-transform duration-200 ease-out delay-150',
-          'group-hover:opacity-100 group-hover:scale-y-100',
-          'group-focus-visible:opacity-100 group-focus-visible:scale-y-100'
-        ].join(' ')}
-      />
-
-      {/* LEFT side (draws downward from top) */}
-      <span
-        className={[
-          'pointer-events-none absolute left-0 top-0 bottom-0 w-[2px] bg-blue-600 rounded',
-          'opacity-0 scale-y-0 origin-top',
-          'transition-transform duration-200 ease-out delay-150',
-          'group-hover:opacity-100 group-hover:scale-y-100',
-          'group-focus-visible:opacity-100 group-focus-visible:scale-y-100'
+            : 'opacity-0 translate-y-[6px] scale-x-0 origin-center group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-x-100'
         ].join(' ')}
       />
     </button>
