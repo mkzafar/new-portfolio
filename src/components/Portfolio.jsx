@@ -11,56 +11,42 @@ import ContactSection from "./ContactSection";
 export default function Portfolio() {
   const [currentPage, setCurrentPage] = useState('landing');
 
-  // Handle scroll on landing page
   useEffect(() => {
     if (currentPage === 'landing') {
       const handleScroll = () => {
-        if (window.scrollY > 100) {
-          setCurrentPage('about');
-        }
+        if (window.scrollY > 100) setCurrentPage('about');
       };
-
       window.addEventListener('scroll', handleScroll);
       return () => window.removeEventListener('scroll', handleScroll);
     }
   }, [currentPage]);
 
-  // Reset scroll position when changing pages (except landing)
   useEffect(() => {
     if (currentPage !== 'landing') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, [currentPage]);
 
-  const handleEnterFromLanding = () => {
-    setCurrentPage('about');
-  };
+  const handleEnterFromLanding = () => setCurrentPage('about');
 
   const handlePageChange = (pageId) => {
-    if (pageId === 'landing') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    if (pageId === 'landing') window.scrollTo({ top: 0, behavior: 'smooth' });
     setCurrentPage(pageId);
   };
 
   const pageVariants = {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: -20 }
+    exit:    { opacity: 0, y: -20 },
   };
 
   const renderCurrentPage = () => {
     switch (currentPage) {
-      case 'about':
-        return <AboutSection key="about" />;
-      case 'projects':
-        return <ProjectsSection key="projects" />;
-      case 'experience':
-        return <ExperienceSection key="experience" />;
-      case 'contact':
-        return <ContactSection key="contact" />;
-      default:
-        return null;
+      case 'about':      return <AboutSection      key="about" />;
+      case 'projects':   return <ProjectsSection   key="projects" />;
+      case 'experience': return <ExperienceSection key="experience" />;
+      case 'contact':    return <ContactSection    key="contact" />;
+      default:           return null;
     }
   };
 
@@ -68,8 +54,8 @@ export default function Portfolio() {
 
   return (
     <div
-      className="min-h-screen"
       style={{
+        minHeight: "100vh",
         backgroundColor: "#e6e1d3",
         backgroundImage: grainBg,
         backgroundRepeat: "repeat",
@@ -81,18 +67,18 @@ export default function Portfolio() {
           <LandingPage onEnter={handleEnterFromLanding} />
         )}
       </AnimatePresence>
-      {/* Scroll target so the landing page scroll listener fires on wheel/swipe */}
+
       {currentPage === 'landing' && (
         <div style={{ height: "200vh" }} aria-hidden />
       )}
 
       {currentPage !== 'landing' && (
-        <>
-          <Navigation 
-            currentPage={currentPage} 
-            onPageChange={handlePageChange}
-          />
-          <main className="pt-20"> {/* Offset for fixed nav */}
+        /* flex column so footer is pushed to bottom on short pages */
+        <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+          <Navigation currentPage={currentPage} onPageChange={handlePageChange} />
+
+          {/* pt-[72px] offsets the fixed nav */}
+          <main style={{ flex: 1, paddingTop: 72 }}>
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentPage}
@@ -106,16 +92,21 @@ export default function Portfolio() {
               </motion.div>
             </AnimatePresence>
           </main>
-          
-          {/* Footer */}
-          <footer className="py-8" style={{ background: "#2a2a20", color: "white" }}>
-            <div className="max-w-6xl mx-auto px-6 text-center">
-              <p className="text-slate-400">
-                © 2024 Muhammad Zafar. All rights reserved.
-              </p>
-            </div>
+
+          {/* Footer — always kissing the bottom */}
+          <footer
+            style={{
+              background: "#2a2a20",
+              borderTop: "1px solid rgba(200,190,170,0.15)",
+              padding: "28px 24px",
+              textAlign: "center",
+            }}
+          >
+            <p style={{ color: "rgba(220,210,195,0.4)", fontSize: 13, fontFamily: "monospace", letterSpacing: "0.06em" }}>
+              © 2025 Muhammad Zafar
+            </p>
           </footer>
-        </>
+        </div>
       )}
     </div>
   );

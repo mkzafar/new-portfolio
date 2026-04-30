@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Experience } from "../entities/experience";
-import { Badge } from "./ui/badge";
 import { ExternalLink, MapPin } from "lucide-react";
 import { format } from "date-fns";
 import bmsLogo from "@/assets/bms-lab.png";
@@ -14,201 +13,167 @@ const COMPANY_LOGOS = {
   "YorkU Application Development Services": ssadcLogo,
 };
 
-function getLogoFor(company) {
-  return COMPANY_LOGOS[company] || null;
-}
-
+function getLogoFor(company) { return COMPANY_LOGOS[company] || null; }
 function getInitials(name = "") {
-  const parts = name.trim().split(/\s+/);
-  const letters = (parts[0]?.[0] || "") + (parts[1]?.[0] || "");
-  return letters.toUpperCase() || "·";
+  const p = name.trim().split(/\s+/);
+  return ((p[0]?.[0] || "") + (p[1]?.[0] || "")).toUpperCase() || "·";
 }
 
-function ExperienceCard({ exp, formatDate, align }) {
-  const isRight = align === "right";
-  return (
-    <div>
-      <p className={`text-sm text-slate-400 font-mono mb-1 ${isRight ? "text-right" : ""}`}>
-        {formatDate(exp.start_date)} — {formatDate(exp.end_date)}
-      </p>
-      <h3 className={`text-lg font-semibold text-slate-900 leading-snug ${isRight ? "text-right" : ""}`}>
-        {exp.position}
-      </h3>
-      <div className={`flex items-center gap-1.5 mt-0.5 ${isRight ? "justify-end" : ""}`}>
-        <a
-          href={exp.company_url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-slate-500 hover:text-slate-800 font-medium text-sm transition-colors flex items-center gap-1"
-        >
-          {exp.company}
-          <ExternalLink className="w-3 h-3 opacity-60" />
-        </a>
-      </div>
-      {exp.location && (
-        <p className={`text-xs text-slate-400 flex items-center gap-1 mt-0.5 ${isRight ? "justify-end" : ""}`}>
-          <MapPin className="w-3 h-3" />
-          {exp.location}
-        </p>
-      )}
-      {exp.bullets && exp.bullets.length > 0 && (
-        <ul className="mt-3 space-y-1.5">
-          {exp.bullets.map((bullet, i) => (
-            <li
-              key={i}
-              className={`text-sm text-slate-600 leading-relaxed flex gap-2 ${isRight ? "flex-row-reverse text-right" : ""}`}
-            >
-              <span className="mt-2 w-1 h-1 rounded-full bg-slate-400 shrink-0" />
-              {bullet}
-            </li>
-          ))}
-        </ul>
-      )}
-      {exp.tags && exp.tags.length > 0 && (
-        <div className={`flex flex-wrap gap-1.5 mt-4 ${isRight ? "justify-end" : ""}`}>
-          {exp.tags.map((tag) => (
-            <Badge
-              key={tag}
-              variant="secondary"
-              className="px-2.5 py-0.5 text-xs bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors"
-            >
-              {tag}
-            </Badge>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
+const raised = {
+  background: "rgba(255,252,245,0.55)",
+  border: "1px solid rgba(220,210,190,0.55)",
+  borderRadius: 12,
+  boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
+};
+
+const inset = {
+  background: "rgba(160,150,130,0.14)",
+  border: "1px solid rgba(160,150,130,0.22)",
+  borderRadius: 12,
+};
 
 export default function ExperienceSection() {
   const [experiences, setExperiences] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadExperiences();
-  }, []);
+  useEffect(() => { loadExperiences(); }, []);
 
   const loadExperiences = async () => {
-    try {
-      const data = await Experience.list("-start_date");
-      setExperiences(data);
-    } catch (error) {
-      console.error("Error loading experiences:", error);
-    }
+    try { setExperiences(await Experience.list("-start_date")); }
+    catch (e) { console.error(e); }
     setLoading(false);
   };
 
-  const formatDate = (dateString) => {
-    if (!dateString) return "Present";
-    return format(new Date(dateString), "MMM yyyy");
-  };
+  const fmt = (d) => d ? format(new Date(d), "MMM yyyy") : "Present";
 
   return (
     <section id="experience" className="py-20" style={{ background: "transparent" }}>
-      <div className="max-w-5xl mx-auto px-6">
+      <div className="max-w-3xl mx-auto px-6">
+
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 28 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
+          transition={{ duration: 0.55 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="mb-14"
         >
-          <h2 className="text-4xl font-bold text-slate-900 mb-4">Experience</h2>
-          <p className="text-lg text-slate-500 max-w-xl mx-auto">
-            Professional journey shaping my skills in engineering and data.
-          </p>
+          <p className="text-xs tracking-[0.2em] text-stone-500 uppercase mb-2 font-mono">Career</p>
+          <h2 className="text-5xl font-bold text-stone-800 leading-tight"
+            style={{ fontFamily: "'Georgia', 'Times New Roman', serif" }}>
+            Experience
+          </h2>
+          <div className="mt-4 w-10 h-px" style={{ background: "rgba(120,110,90,0.4)" }} />
         </motion.div>
 
         {loading ? (
-          <div className="relative">
-            <div className="absolute left-1/2 top-0 bottom-0 w-px bg-slate-200 -translate-x-1/2" />
-            <div className="space-y-12">
-              {[...Array(3)].map((_, i) => (
-                <div key={i} className="relative flex items-start animate-pulse">
-                  <div className="w-1/2 pr-12 flex justify-end">
-                    {i % 2 === 0 && (
-                      <div className="w-full space-y-3">
-                        <div className="h-4 bg-slate-200 rounded w-1/2 ml-auto" />
-                        <div className="h-3 bg-slate-200 rounded w-1/3 ml-auto" />
-                        <div className="h-3 bg-slate-200 rounded w-3/4 ml-auto" />
-                      </div>
-                    )}
-                  </div>
-                  <div className="absolute left-1/2 -translate-x-1/2 w-10 h-10 bg-slate-200 rounded-full" />
-                  <div className="w-1/2 pl-12">
-                    {i % 2 !== 0 && (
-                      <div className="space-y-3">
-                        <div className="h-4 bg-slate-200 rounded w-1/2" />
-                        <div className="h-3 bg-slate-200 rounded w-1/3" />
-                        <div className="h-3 bg-slate-200 rounded w-3/4" />
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
+          <div className="space-y-8 pl-10">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="h-28 rounded-xl animate-pulse"
+                style={{ background: "rgba(200,190,170,0.2)" }} />
+            ))}
           </div>
         ) : (
           <div className="relative">
-            {/* Center vertical line */}
+            {/* Vertical timeline line */}
             <div
-              className="absolute left-1/2 top-0 bottom-0 w-px bg-slate-200 -translate-x-1/2"
+              className="absolute top-0 bottom-0"
+              style={{
+                left: 19,
+                width: 1,
+                background: "rgba(160,150,130,0.35)",
+              }}
               aria-hidden
             />
 
-            <div className="space-y-0">
-              {experiences.map((exp, index) => {
-                const logoSrc = getLogoFor(exp.company);
-                const isLast = index === experiences.length - 1;
-                const cardOnLeft = index % 2 === 0;
+            <div className="space-y-6">
+              {experiences.map((exp, i) => {
+                const logo = getLogoFor(exp.company);
+                const panel = i % 2 === 0 ? raised : inset;
 
                 return (
                   <motion.div
-                    key={index}
-                    initial={{ opacity: 0, x: cardOnLeft ? -24 : 24 }}
+                    key={i}
+                    initial={{ opacity: 0, x: -16 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.55, delay: index * 0.08 }}
+                    transition={{ duration: 0.5, delay: i * 0.07 }}
                     viewport={{ once: true }}
-                    className={`relative flex items-start ${isLast ? "pb-0" : "pb-14"}`}
+                    className="relative flex gap-6"
                   >
-                    {/* Left half */}
-                    <div className="w-1/2 pr-12">
-                      {cardOnLeft && (
-                        <ExperienceCard
-                          exp={exp}
-                          formatDate={formatDate}
-                          align="right"
-                        />
-                      )}
-                    </div>
-
-                    {/* Center logo/dot */}
-                    <div className="absolute left-1/2 -translate-x-1/2 z-10 mt-1">
-                      <div className="w-10 h-10 rounded-full border-2 border-slate-200 bg-white shadow-sm flex items-center justify-center overflow-hidden">
-                        {logoSrc ? (
-                          <img
-                            src={logoSrc}
-                            alt={`${exp.company} logo`}
-                            className="h-full w-full object-contain"
-                            loading="lazy"
-                          />
+                    {/* Logo dot — sits on the line */}
+                    <div className="shrink-0 z-10" style={{ marginTop: 2 }}>
+                      <div
+                        className="w-10 h-10 rounded-full flex items-center justify-center overflow-hidden"
+                        style={{
+                          background: "rgba(230,225,211,0.85)",
+                          border: "1px solid rgba(200,190,170,0.6)",
+                          boxShadow: "0 0 0 3px rgba(230,225,211,0.5)",
+                        }}
+                      >
+                        {logo ? (
+                          <img src={logo} alt={exp.company} className="w-full h-full object-contain" loading="lazy" />
                         ) : (
-                          <span className="text-slate-600 text-xs font-bold">
+                          <span style={{ fontSize: 11, fontWeight: 700, color: "#7a7060" }}>
                             {getInitials(exp.company)}
                           </span>
                         )}
                       </div>
                     </div>
 
-                    {/* Right half */}
-                    <div className="w-1/2 pl-12">
-                      {!cardOnLeft && (
-                        <ExperienceCard
-                          exp={exp}
-                          formatDate={formatDate}
-                          align="left"
-                        />
+                    {/* Card */}
+                    <div style={panel} className="p-6 flex-1 min-w-0">
+                      <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
+                        <div>
+                          <h3 className="font-semibold text-stone-800 text-base leading-snug">
+                            {exp.position}
+                          </h3>
+                          <a
+                            href={exp.company_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-sm text-stone-500 hover:text-stone-800 transition-colors mt-0.5"
+                          >
+                            {exp.company}
+                            <ExternalLink className="w-3 h-3 opacity-50" />
+                          </a>
+                        </div>
+
+                        <div className="text-right shrink-0">
+                          <p className="text-xs font-mono text-stone-400">
+                            {fmt(exp.start_date)} — {fmt(exp.end_date)}
+                          </p>
+                          {exp.location && (
+                            <p className="flex items-center gap-1 justify-end text-xs text-stone-400 mt-0.5">
+                              <MapPin className="w-3 h-3" />
+                              {exp.location}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      {exp.bullets?.length > 0 && (
+                        <ul className="space-y-1.5 mt-3 mb-4">
+                          {exp.bullets.map((b, j) => (
+                            <li key={j} className="flex gap-2 text-sm text-stone-600 leading-relaxed">
+                              <span className="mt-2 w-1 h-1 rounded-full bg-stone-400/70 shrink-0" />
+                              {b}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+
+                      {exp.tags?.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mt-3">
+                          {exp.tags.map((tag) => (
+                            <span key={tag}
+                              className="px-2.5 py-0.5 text-xs rounded text-stone-500"
+                              style={{
+                                background: "rgba(180,170,150,0.22)",
+                                border: "1px solid rgba(180,170,150,0.35)",
+                              }}>
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
                       )}
                     </div>
                   </motion.div>

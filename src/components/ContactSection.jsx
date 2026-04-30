@@ -26,49 +26,98 @@ const links = [
   },
 ];
 
+// lighter-than-bg card
+const raised = {
+  background: "rgba(255,252,245,0.55)",
+  border: "1px solid rgba(220,210,190,0.55)",
+  borderRadius: 12,
+  boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
+};
+
 export default function ContactSection() {
   return (
-    <section id="contact" className="py-24" style={{ background: "transparent" }}>
-      <div className="max-w-2xl mx-auto px-6 text-center">
+    /*
+      flex + flex-col + flex-1 so this section grows to fill all remaining
+      space in the Portfolio flex column, pushing the footer to the bottom
+      even when content is short.
+    */
+    <section
+      id="contact"
+      style={{
+        background: "transparent",
+        display: "flex",
+        flexDirection: "column",
+        flex: 1,
+        padding: "80px 24px",
+      }}
+    >
+      <div className="max-w-xl mx-auto w-full">
+
+        {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 28 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
+          transition={{ duration: 0.55 }}
           viewport={{ once: true }}
+          className="mb-14"
         >
-          <h2 className="text-4xl font-bold text-slate-900 mb-4">Get In Touch</h2>
-          <p className="text-slate-500 text-lg leading-relaxed mb-14">
-            I'm currently open to new opportunities. Whether it's a role, a
-            project, or just a conversation — feel free to reach out.
+          <p className="text-xs tracking-[0.2em] text-stone-500 uppercase mb-2 font-mono">Reach out</p>
+          <h2 className="text-5xl font-bold text-stone-800 leading-tight"
+            style={{ fontFamily: "'Georgia', 'Times New Roman', serif" }}>
+            Get In Touch
+          </h2>
+          <div className="mt-4 w-10 h-px" style={{ background: "rgba(120,110,90,0.4)" }} />
+          <p className="mt-6 text-stone-500 text-base leading-relaxed">
+            Open to new opportunities — whether it's a role, a project, or just a conversation.
           </p>
         </motion.div>
 
-        <div className="space-y-4">
+        {/* Link rows — raised cards for contrast against the grain bg */}
+        <div className="space-y-3">
           {links.map(({ label, value, href, icon: Icon, description }, i) => (
             <motion.a
               key={label}
               href={href}
               target={href.startsWith("mailto") ? undefined : "_blank"}
               rel="noopener noreferrer"
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 14 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
+              transition={{ duration: 0.45, delay: i * 0.08 }}
               viewport={{ once: true }}
-              className="flex items-center gap-5 p-5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 hover:border-slate-300 transition-all duration-200 text-left group"
+              className="flex items-center gap-5 p-5 text-left group transition-all duration-200"
+              style={raised}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(255,252,245,0.82)";
+                e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,0.1)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgba(255,252,245,0.55)";
+                e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.06)";
+              }}
             >
-              <div className="w-11 h-11 rounded-lg bg-white border border-slate-200 flex items-center justify-center shrink-0 shadow-sm group-hover:shadow transition-shadow">
-                <Icon className="w-5 h-5 text-slate-600" />
+              {/* Icon box — inset chip inside the raised card */}
+              <div
+                className="w-11 h-11 rounded-lg flex items-center justify-center shrink-0 transition-colors duration-200"
+                style={{
+                  background: "rgba(160,150,130,0.18)",
+                  border: "1px solid rgba(160,150,130,0.28)",
+                }}
+              >
+                <Icon className="w-5 h-5 text-stone-500" />
               </div>
+
               <div className="min-w-0">
-                <p className="text-xs text-slate-400 mb-0.5">{description}</p>
-                <p className="text-slate-800 font-medium truncate">{value}</p>
+                <p className="text-xs text-stone-400 mb-0.5 font-mono">{description}</p>
+                <p className="text-stone-700 font-medium text-sm truncate">{value}</p>
               </div>
-              <span className="ml-auto text-slate-300 group-hover:text-slate-500 transition-colors text-lg">
+
+              <span className="ml-auto text-stone-300 group-hover:text-stone-600 transition-colors duration-200 text-base">
                 →
               </span>
             </motion.a>
           ))}
         </div>
+
       </div>
     </section>
   );

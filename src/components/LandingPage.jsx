@@ -123,8 +123,8 @@ export default function LandingPage({ onEnter }) {
         }}
       />
 
-      {/* Hero content — offset ~1/5 from left */}
-      <div className="relative z-10 max-w-2xl" style={{ paddingLeft: "18vw", paddingRight: "2rem" }}>
+      {/* Hero content — ~1/5 in from left, no max-width so lines never wrap */}
+      <div className="relative z-10" style={{ paddingLeft: "18vw", paddingRight: "3rem" }}>
         {/* Available badge */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -174,6 +174,7 @@ export default function LandingPage({ onEnter }) {
             color: "#f0ebe2",
             margin: 0,
             fontFamily: "'Georgia', 'Times New Roman', serif",
+            whiteSpace: "nowrap",
           }}
         >
           Muhammad Zafar
@@ -186,17 +187,18 @@ export default function LandingPage({ onEnter }) {
           transition={{ duration: 0.7, delay: 0.35 }}
           style={{
             marginTop: "1.2rem",
-            fontSize: "clamp(1rem, 2vw, 1.25rem)",
+            fontSize: "clamp(0.9rem, 1.5vw, 1.1rem)",
             color: "rgba(220,210,195,0.7)",
             fontWeight: 400,
             letterSpacing: "0.01em",
             borderLeft: "2px solid rgba(200,185,160,0.4)",
             paddingLeft: "1rem",
+            whiteSpace: "nowrap",
           }}
         >
-          Computer Engineering — York University
+          Computer Engineering - York University
           <br />
-          Data Science @ Scotiabank
+          <span style={{ opacity: 0.85 }}>Data Science - Scotiabank</span>
         </motion.p>
 
         {/* Social links */}
