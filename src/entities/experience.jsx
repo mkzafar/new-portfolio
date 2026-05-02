@@ -4,13 +4,15 @@ export class Experience {
       {
         company: 'Scotiabank',
         position: 'Data Science Intern',
-        bullets: [],
+        bullets: [
+          'Incoming Data Science Intern'
+        ],
         start_date: '2026-05-01',
-        end_date: '2026-08-01',
+        end_date: null,
         company_url: 'https://www.scotiabank.com/',
-        is_current: false,
+        is_current: true,
         location: 'Toronto, Ontario',
-        tags: ['Data Science', 'Python', 'ML'],
+        tags: ['Data Analytics', 'Python', 'ML', 'GCP', 'SQL', 'Power BI'],
       },
       {
         company: 'BMS Lab @ University of Twente',

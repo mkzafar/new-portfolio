@@ -6,11 +6,13 @@ import { format } from "date-fns";
 import bmsLogo from "@/assets/bms-lab.png";
 import riipenLogo from "@/assets/riipen.avif";
 import ssadcLogo from "@/assets/ssadc.jpg";
+import scotialogo from "@/assets/scotialogo.jpeg";
 
 const COMPANY_LOGOS = {
   "BMS Lab @ University of Twente": bmsLogo,
   "Freelance @ Riipen": riipenLogo,
   "YorkU Application Development Services": ssadcLogo,
+  "Scotiabank": scotialogo,
 };
 
 function getLogoFor(company) { return COMPANY_LOGOS[company] || null; }
